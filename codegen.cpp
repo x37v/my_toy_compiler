@@ -1,6 +1,7 @@
 #include "node.h"
 #include "codegen.h"
 #include "parser.hpp"
+#include "llvm/ADT/Twine.h"
 
 using namespace std;
 
@@ -153,7 +154,9 @@ Value* NReturnStatement::codeGen(CodeGenContext& context)
 Value* NVariableDeclaration::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating variable declaration " << type.name << " " << id.name << endl;
-	AllocaInst *alloc = new AllocaInst(typeOf(type), id.name.c_str(), context.currentBlock());
+	Twine t(id.name.c_str());
+	// XXX I don't know if 0 for AddrSpace space is correct here
+	AllocaInst *alloc = new AllocaInst(typeOf(type), 0, t, context.currentBlock());
 	context.locals()[id.name] = alloc;
 	if (assignmentExpr != NULL) {
 		NAssignment assn(id, *assignmentExpr);
