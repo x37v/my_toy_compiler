@@ -89,8 +89,8 @@ func_decl_args : /*blank*/  { $$ = new VariableList(); }
 ident : TIDENTIFIER { $$ = new NIdentifier(*$1); delete $1; }
 	  ;
 
-numeric : TINTEGER { $$ = new NInteger(atol($1->c_str())); delete $1; }
-		| TDOUBLE { $$ = new NDouble(atof($1->c_str())); delete $1; }
+numeric : TINTEGER { $$ = new NValue<long long>(atol($1->c_str())); delete $1; }
+		| TDOUBLE { $$ = new NValue<double>(atof($1->c_str())); delete $1; }
 		;
 	
 expr : ident TEQUAL expr { $$ = new NAssignment(*$<ident>1, *$3); }

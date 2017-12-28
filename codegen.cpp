@@ -58,16 +58,25 @@ static Type *typeOf(const NIdentifier& type)
 
 /* -- Code Generation -- */
 
-Value* NInteger::codeGen(CodeGenContext& context)
+template <>
+Value* NValue<long long>::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating integer: " << value << endl;
 	return ConstantInt::get(Type::getInt64Ty(MyContext), value, true);
 }
 
-Value* NDouble::codeGen(CodeGenContext& context)
+template <>
+Value* NValue<double>::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating double: " << value << endl;
 	return ConstantFP::get(Type::getDoubleTy(MyContext), value);
+}
+
+template <>
+Value* NValue<float>::codeGen(CodeGenContext& context)
+{
+	std::cout << "Creating float: " << value << endl;
+	return ConstantFP::get(Type::getFloatTy(MyContext), value);
 }
 
 Value* NIdentifier::codeGen(CodeGenContext& context)

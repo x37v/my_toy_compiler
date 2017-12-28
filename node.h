@@ -23,17 +23,11 @@ class NExpression : public Node {
 class NStatement : public Node {
 };
 
-class NInteger : public NExpression {
+template <typename T>
+class NValue : public NExpression {
 public:
-	long long value;
-	NInteger(long long value) : value(value) { }
-	virtual llvm::Value* codeGen(CodeGenContext& context);
-};
-
-class NDouble : public NExpression {
-public:
-	double value;
-	NDouble(double value) : value(value) { }
+	T value;
+	NValue(T value) : value(value) { }
 	virtual llvm::Value* codeGen(CodeGenContext& context);
 };
 
