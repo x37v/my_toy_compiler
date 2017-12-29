@@ -25,21 +25,21 @@ class NBlock;
 static LLVMContext MyContext;
 
 class CodeGenBlock {
-public:
+  public:
     BasicBlock *block;
     Value *returnValue;
     std::map<std::string, Value*> locals;
 };
 
 class CodeGenContext {
+  private:
     std::stack<CodeGenBlock *> blocks;
     Function *mainFunction;
 
-public:
-
+  public:
     Module *module;
     CodeGenContext() { module = new Module("main", MyContext); }
-    
+
     void generateCode(NBlock& root);
     GenericValue runCode();
     std::map<std::string, Value*>& locals() { return blocks.top()->locals; }
