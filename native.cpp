@@ -1,7 +1,5 @@
 #include <cstdio>
 
-extern "C"
-void printi(int val)
-{
-    printf("%d\n", val);
+extern "C" void printi(int val) {
+  printf("%d\n", val);
 }
