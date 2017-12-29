@@ -5,6 +5,11 @@ int do_math(int a) {
   return x + 3
 }
 
+float blah(float a) {
+   return a
+}
+
 echo(do_math(11))
 echo(do_math(12))
+blah(234.0)
 printi(10)
