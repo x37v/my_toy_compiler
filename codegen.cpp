@@ -2,6 +2,7 @@
 #include "codegen.h"
 #include "parser.hpp"
 #include "llvm/ADT/Twine.h"
+#include <stdexcept>
 
 using namespace std;
 
@@ -92,19 +93,16 @@ Value* NValue<float>::codeGen(CodeGenContext& context)
 Value* NIdentifier::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating identifier reference: " << name << endl;
-	if (context.locals().find(name) == context.locals().end()) {
-		std::cerr << "undeclared variable " << name << endl;
-		return NULL;
-	}
+	if (context.locals().find(name) == context.locals().end())
+    throw std::runtime_error("undeclared variable: " + name);
 	return new LoadInst(context.locals()[name], "", false, context.currentBlock());
 }
 
 Value* NMethodCall::codeGen(CodeGenContext& context)
 {
 	Function *function = context.module->getFunction(id.name.c_str());
-	if (function == NULL) {
-		std::cerr << "no such function " << id.name << endl;
-	}
+	if (function == NULL)
+		throw std::runtime_error("no such function " + id.name);
 	std::vector<Value*> args;
 	ExpressionList::const_iterator it;
 	for (it = arguments.begin(); it != arguments.end(); it++) {
@@ -137,10 +135,8 @@ math:
 Value* NAssignment::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating assignment for " << lhs.name << endl;
-	if (context.locals().find(lhs.name) == context.locals().end()) {
-		std::cerr << "undeclared variable " << lhs.name << endl;
-		return NULL;
-	}
+	if (context.locals().find(lhs.name) == context.locals().end())
+		throw std::runtime_error("undeclared variable " + lhs.name);
 	return new StoreInst(rhs.codeGen(context), context.locals()[lhs.name], false, context.currentBlock());
 }
 
