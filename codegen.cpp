@@ -48,9 +48,12 @@ GenericValue CodeGenContext::runCode() {
 static Type *typeOf(const NIdentifier& type) 
 {
 	if (type.name.compare("int") == 0) {
+		return Type::getInt32Ty(MyContext);
+  } else if (type.name.compare("long") == 0) {
 		return Type::getInt64Ty(MyContext);
-	}
-	else if (type.name.compare("double") == 0) {
+	} else if (type.name.compare("float") == 0) {
+		return Type::getFloatTy(MyContext);
+	} else if (type.name.compare("double") == 0) {
 		return Type::getDoubleTy(MyContext);
 	}
 	return Type::getVoidTy(MyContext);
@@ -61,8 +64,15 @@ static Type *typeOf(const NIdentifier& type)
 template <>
 Value* NValue<long long>::codeGen(CodeGenContext& context)
 {
-	std::cout << "Creating integer: " << value << endl;
+	std::cout << "Creating long integer: " << value << endl;
 	return ConstantInt::get(Type::getInt64Ty(MyContext), value, true);
+}
+
+template <>
+Value* NValue<int32_t>::codeGen(CodeGenContext& context)
+{
+	std::cout << "Creating integer: " << value << endl;
+	return ConstantInt::get(Type::getInt32Ty(MyContext), value, true);
 }
 
 template <>
@@ -76,7 +86,7 @@ template <>
 Value* NValue<float>::codeGen(CodeGenContext& context)
 {
 	std::cout << "Creating float: " << value << endl;
-	return ConstantFP::get(Type::getFloatTy(MyContext), value);
+	return ConstantFP::get(Type::getFloatTy(MyContext), (float)value);
 }
 
 Value* NIdentifier::codeGen(CodeGenContext& context)
